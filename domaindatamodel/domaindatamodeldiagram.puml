@@ -1,0 +1,11 @@
+@startuml Domain data model diagram template
+
+hide <<Abstract>> stereotype
+skinparam rectangle {
+  
+  BackgroundColor white
+  FontName Helvetica
+  FontStyle<<Abstract>> italic
+} 
+
+@enduml

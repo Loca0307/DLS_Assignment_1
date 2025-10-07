@@ -1,0 +1,8 @@
+@startuml Exercise 1.1
+' Do not touch this line
+' You can use the special DSL to implement the domain data model. 
+' To see how it works, have a look to gothicsecurity.puml file in this folder.
+!include domaindatamodeldiagram.puml
+
+
+@enduml

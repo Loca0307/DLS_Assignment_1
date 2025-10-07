@@ -1,0 +1,36 @@
+@startuml Gothic Security Domain Data Model
+!include domaindatamodeldiagram.puml
+
+rectangle Name 
+rectangle Code 
+rectangle MachineObject <<Abstract>>
+rectangle AbstractEvent <<Abstract>>
+rectangle Event
+rectangle Command
+rectangle Transition 
+rectangle State
+rectangle StateMachine 
+rectangle ResetEvent
+
+' Specializations
+AbstractEvent -up-|> MachineObject
+State -up-|> MachineObject
+
+Event -up-|> AbstractEvent
+Command -up-|> AbstractEvent
+
+ResetEvent -right-|> Event
+
+' Relations
+MachineObject "!" -left-> "!" Name : name
+AbstractEvent "!" -left-> "!" Code : code
+
+Transition -right-> "!" State: "source"
+Transition -right-> "!" State: "target"
+Transition -up-> "!" Event: "trigger"
+
+State -up-> "*" Command : actions
+
+StateMachine -up-> "*" Transition: "transitions"
+StateMachine -right-> "!" State: "initialState"
+@enduml
