@@ -28,7 +28,7 @@ case class FrequentFlyerCode(val value: Int):
   def formatted: String = f"$value%08d"
 
 case class FrequentFlyerNumber(val airline: Airline, val code: FrequentFlyerCode):  //TODO: Valutare se deve essere associata direttamente la Airline oppure si può associare un 2-digit generico
-  val value: String = airline.code.value + code.formatted
+  val value: String = airline.code.value + code.formatted                           // dall'esempio il FFN usa "OX" quindi uno IATA code della airline quindi per quanto ne sappiamo io rimarrei con lo IATA code. Per me ha senso come lo gestiamo ora 
 
 case class BookingCode(val value: String):
   require(value.matches("[A-Z0-9]{6}"), "Booking code must be exactly 6 uppercase digits (numbers or letters)")
@@ -88,27 +88,20 @@ case class CodeshareFlight (
   sellerFlightNumber: FlightNumber,
   operatorFlightNumber: FlightNumber
 ) extends Flight:
-  require(operatedBy != soldBy, "A CodeshareFlight must be sold and operated by two different airlines")
+  require(operatedBy != soldBy, "A CodeshareFlight must be sold and operated by two different airlines") // TODO: Valutare se mettere il require che il sellerFLightNumber e operatorFlightNumber siano diverse, come abbiamo fatto nel pureFlight. Decidere se e possibile o no che le 2 airline per il volo possono avere lo stesso FLightNumber
+  
 
 case class Trip(val flights: Set[Flight]):
   require(flights.size > 0)
 
 case class Passenger(val name: Name, val ffn: Option[FrequentFlyerNumber]) //TODO: Valutare se FrequentFlyerNumber è unico o può averne più di uno, per ogni compagnia aerea
+                                                                          // puo` essere effettivamente ha lo IATA code specifico della airline, magari si intende un numero di un passeggiero che viaggia frequentemente con quella airline specifica. Io lo aggiungerei
 
 case class Booking(val code: BookingCode, val trips: Set[Trip], val passengers: Set[Passenger]):
   require(trips.size > 0 && passengers.size > 0)
 
 
 
-
-
-
-
-
-
-
-
-  
 
 
 /** Exercise 2: Example 1 
@@ -226,6 +219,8 @@ def printFlight(f: Flight): String =
 
 /** Examples to construct dates
   */
+
+/*
 @main def datatypeExamples: Unit =
   // 1st of January 2024
   val date1 = LocalDate.of(2024, 1, 1)
@@ -235,3 +230,5 @@ def printFlight(f: Flight): String =
 
   println(date1)
   println(date2)
+
+  */
