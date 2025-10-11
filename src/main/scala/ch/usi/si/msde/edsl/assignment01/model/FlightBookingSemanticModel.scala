@@ -56,7 +56,7 @@ case class Airline(val name: String, val code: IATACode):
 case class FlightNumber(val code: FlightCode, val airline: Airline):
   val value: String = airline.code.value + code.formatted
 
-sealed trait Flight:
+sealed trait Flight: 
   val date: LocalDate
   val departure: Airport
   val arrival: Airport
@@ -67,7 +67,7 @@ sealed trait Flight:
 
   require(departure != arrival, "Departure and arrival airports must be different")
 
-case class PureFlight(
+case class PureFlight( // Non dovrebbero avere "extends AbstractEvent queste classi?"
   date: LocalDate,
   departure: Airport,
   arrival: Airport,
