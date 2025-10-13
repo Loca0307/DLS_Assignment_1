@@ -29,7 +29,7 @@ trait NLPFluentApi:
   // Flight Departure
   class FlightDepartureBuilder:
     def from(departure: Airport): FlightArrivalBuilder =
-      FlightArrivalBuilder(departure)
+      FlightArrivalBuilder(departure) // Return the next builder to concatenate methods
 
   def FlightBuilder(): FlightDepartureBuilder = new FlightDepartureBuilder
 
@@ -57,7 +57,7 @@ trait NLPFluentApi:
     soldBy: Airline
   ):
 
-    /** Build a PureFlight (same airline selling and operating) */
+    // Build a PureFlight 
     def pure(code: Int): BuiltFlight =
       require(operatedBy == soldBy, "PureFlight must have the same seller and operator")
       val fc = FlightCode(code)
@@ -66,7 +66,7 @@ trait NLPFluentApi:
         PureFlight(date, departure, arrival, operatedBy, soldBy, fn, fn)
       )
 
-    /** Build a CodeshareFlight (different airlines) */
+    //Build a CodeshareFlight
     def codeshare(sellerCode: Int, operatorCode: Int): BuiltFlight =
       require(operatedBy != soldBy, "CodeshareFlight must have different seller and operator")
       val sellerFN = FlightNumber(FlightCode(sellerCode), soldBy)
@@ -78,7 +78,7 @@ trait NLPFluentApi:
 
   case class BuiltFlight(build: LocalDate => Flight)
 
-  // PASSENGER 
+  // PASSENGER
 
   class PassengerBuilder:
     def named(fn: String, ln: String): PassengerFFBuilder =
