@@ -7,6 +7,7 @@ import java.time.LocalDate
 import java.awt.print.Book
 import scala.language.unsafeNulls
 
+
 /*
  * Implement here, or in other scala files in this package,
  * the semantic model for Exercise 2. If you use other
