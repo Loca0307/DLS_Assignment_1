@@ -60,13 +60,10 @@ trait NLPFluentApi:
   def onFlight(flight: Flight) = this
   def atSeat(seat: Seat): FlightReservation = ???
 
-  // ---------- trips (function sequences) ----------
-  /** Build a trip providing a date to materialize flights (if your impl needs it))(
-    * and a varargs of flights plus varargs of reservations.
-    */
+  // Trip
   def trip(reservations: FlightReservation*): Trip = ???
 
-  // ---------- meal orders ----------
+  // Special Meal
   def order(passenger: Passenger) = this
   def on(reservation: FlightReservation) = this
   def meals(meals: SpecialMeal*): MealOrder = ???

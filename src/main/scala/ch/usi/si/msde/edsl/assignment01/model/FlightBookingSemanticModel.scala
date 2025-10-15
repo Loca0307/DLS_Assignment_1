@@ -280,7 +280,7 @@ case class Trip(val reservations: Set[FlightReservation]):
 
   // SYD -> SIN, pure (OX0700)
   val fBack1 = PureFlight(
-    date = LocalDate.of(2026, 10, 15),
+    date = LocalDate.of(2025, 10, 15),
     departure = SYD,
     arrival = SIN,
     operatedBy = OX,
@@ -293,7 +293,7 @@ case class Trip(val reservations: Set[FlightReservation]):
 
   // SIN -> CDG, codeshare (sold OX0403, operated PA0100)
   val fBack2 = CodeshareFlight(
-    date = LocalDate.of(2026, 10, 15),
+    date = LocalDate.of(2025, 10, 15),
     departure = SIN,
     arrival = CDG,
     operatedBy = PA,

@@ -37,22 +37,22 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
                 reservedFor(alex).onFlight(
                     `pure flight`.from(SYD).to(CDG)
                         .`on date`(LocalDate.of(2025, 10, 1))
-                        .operatedBy(OX).`with operator flight number`(`flight code`(100))
+                        .operatedBy(OX).`with operator flight number`(`flight code`(815))
                         .`offers special meals`(babyMeal, glutenFreeMeal)
                         .`includes cabins`(economyClass(`has seats`(A1, A2)), businessClass(`has seats`(B1, B2)), firstClass(`has seats`(C1, C2)))
                 ).atSeat(A1)), 
             trip(
                 reservedFor(alex).onFlight(
                     `pure flight`.from(SYD).to(SIN)
-                        .`on date`(LocalDate.of(2025, 10, 30))
+                        .`on date`(LocalDate.of(2025, 10, 15))
                         .operatedBy(OX).`with operator flight number`(`flight code`(700))
                         .`offers special meals`(babyMeal)
                         .`includes cabins`(economyClass(`has seats`(A1, A2)))
                 ).atSeat(B2), 
                 reservedFor(alex).onFlight(
                     `codeshare flight`.from(SIN).to(CDG)
-                        .`on date`(LocalDate.of(2025, 10, 30))
-                        .soldBy(OX).`with seller flight number`(`flight code`(700))
-                        .operatedBy(OX).`with operator flight number`(`flight code`(700))
+                        .`on date`(LocalDate.of(2025, 10, 15))
+                        .soldBy(OX).`with seller flight number`(`flight code`(403))
+                        .operatedBy(PA).`with operator flight number`(`flight code`(100))
                         .`includes cabins`(businessClass(`has seats`(B1, B2)))
                 ).atSeat(C1)))

@@ -33,18 +33,18 @@ object FlightBookingEx1 extends NLPFluentApi:
 
     val outboundFlight = `pure flight`.from(SYD).to(CDG)
         .`on date`(LocalDate.of(2025, 10, 1))
-        .operatedBy(OX).`with operator flight number`(`flight code`(100))
+        .operatedBy(OX).`with operator flight number`(`flight code`(815))
         .`includes cabins`(ecoClass, busClass, fClass)
     
     val inboundFlight1 = `pure flight`.from(SYD).to(SIN)
-        .`on date`(LocalDate.of(2025, 10, 30))
+        .`on date`(LocalDate.of(2025, 10, 15))
         .operatedBy(OX).`with operator flight number`(`flight code`(700))
         .`includes cabins`(ecoClass)
 
     val inboundFlight2 = `codeshare flight`.from(SIN).to(CDG)
-        .`on date`(LocalDate.of(2025, 10, 30))
-        .soldBy(OX).`with seller flight number`(`flight code`(700))
-        .operatedBy(OX).`with operator flight number`(`flight code`(700))
+        .`on date`(LocalDate.of(2025, 10, 15))
+        .soldBy(OX).`with seller flight number`(`flight code`(403))
+        .operatedBy(PA).`with operator flight number`(`flight code`(100))
         .`includes cabins`(busClass)
 
     val outReservation = reservedFor(alex).onFlight(outboundFlight).atSeat(A1)
