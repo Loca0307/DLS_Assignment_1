@@ -2,97 +2,79 @@ package ch.usi.si.msde.edsl.assignment01.fluentapi
 
 import ch.usi.si.msde.edsl.assignment01.model.* 
 import java.time.LocalDate
+import java.awt.print.Book
 
 trait NLPFluentApi:
 
-  // BOOKING 
-
-  def booking(code: String)(trips: Trip*)(passengers: Passenger*): Booking =
-    Booking(
-      BookingCode(code),
-      trips.toSet,
-      passengers.toSet
-    )
-
-  // TRIP
-
-  class TripBuilder:
-    def on(date: LocalDate)(flights: BuiltFlight*): Trip =
-      val realizedFlights = flights.map(f => f.build(date))
-      Trip(realizedFlights.toSet)
-
-
-  def TripBuilder(): TripBuilder = new TripBuilder
-
-  // FLIGHT 
-
-  // Flight Departure
-  class FlightDepartureBuilder:
-    def from(departure: Airport): FlightArrivalBuilder =
-      FlightArrivalBuilder(departure) // Return the next builder to concatenate methods
-
-  def FlightBuilder(): FlightDepartureBuilder = new FlightDepartureBuilder
-
-  // Flight Arrival
-  case class FlightArrivalBuilder(departure: Airport):
-    def to(arrival: Airport): FlightDetailsBuilder =
-      require(departure != arrival, "Departure and arrival airports must be different")
-      FlightDetailsBuilder(departure, arrival)
+  def named(name: String) = name  // Only for beautifying the API
+  def `flight code`(value: Int): FlightCode = ???
   
-  // Operator Airline
-  case class FlightDetailsBuilder(departure: Airport, arrival: Airport):
-    def operatedBy(operator: Airline): FlightSoldByBuilder =
-      FlightSoldByBuilder(departure, arrival, operator)
+  // Airline
+  def airline(name: String)(code: IATACode): Airline = ???
+  def `with IATA code`(value: String): IATACode = ???
 
-  // Seller Airline
-  case class FlightSoldByBuilder(departure: Airport, arrival: Airport, operatedBy: Airline):
-    def soldBy(seller: Airline): FlightNumberBuilder =
-      FlightNumberBuilder(departure, arrival, operatedBy, seller)
+  // Airport
+  def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???  // OR NESTED def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???
+  def `with airport code`(value: String): AirportCode = ???
+  def `in city`(value: String): AirportCity = ???
 
-  // Assign flight numbers
-  case class FlightNumberBuilder(
-    departure: Airport,
-    arrival: Airport,
-    operatedBy: Airline,
-    soldBy: Airline
-  ):
+  // Passenger
+  def passNamed(first: String)(last: String): PassengerName = ???
+  def childPassenger(name: PassengerName)(age: Int) = this
+  def youngPassenger(name: PassengerName)(age: Int) = this
+  def adultPassenger(name: PassengerName)(age: Int) = this
+  def seniorPassenger(name: PassengerName)(age: Int) = this
+  def withFrequentFlyer(airline: Airline)(code: FrequentFlyerCode): Passenger = ???
+  def `ff code`(value: Int): FrequentFlyerCode = ???
+  def noFrequentFlyer(): Passenger = ???
 
-    // Build a PureFlight 
-    def pure(code: Int): BuiltFlight =
-      require(operatedBy == soldBy, "PureFlight must have the same seller and operator")
-      val fc = FlightCode(code)
-      val fn = FlightNumber(fc, operatedBy)
-      BuiltFlight((date: LocalDate) =>
-        PureFlight(date, departure, arrival, operatedBy, soldBy, fn, fn)
-      )
+  // Fligth
+  def `pure flight` = this
+  def `codeshare flight` = this
+  def `on date`(onDate: LocalDate) = this
+  def from(departure: Airport) = this
+  def to(arrival: Airport) = this
+  def soldBy(airline: Airline) = this                               // Could be optional the flight is pure
+  def `with seller flight number`(sellerNumber: FlightCode) = this  // Could be optional the flight is pure
+  def operatedBy(airline: Airline) = this
+  def `with operator flight number`(operatorNumber: FlightCode) = this 
+  def `offers special meals`(meals: SpecialMeal*) = this
+  def `includes cabins`(cabins: Cabin*): Flight = ???
 
-    //Build a CodeshareFlight
-    def codeshare(sellerCode: Int, operatorCode: Int): BuiltFlight =
-      require(operatedBy != soldBy, "CodeshareFlight must have different seller and operator")
-      val sellerFN = FlightNumber(FlightCode(sellerCode), soldBy)
-      val operatorFN = FlightNumber(FlightCode(operatorCode), operatedBy)
-      BuiltFlight((date: LocalDate) =>
-        CodeshareFlight(date, departure, arrival, operatedBy, soldBy, sellerFN, operatorFN)
-      )
+  // Cabins/classes
+  def economyClass(seats: Set[Seat]): Cabin = ???
+  def businessClass(seats: Set[Seat]): Cabin = ???
+  def firstClass(seats: Set[Seat]): Cabin = ???
+  def `has seats`(seats: Seat*): Set[Seat] = ???
 
+  def seat(letter: Char)(number: Int): Seat = ???
 
-  case class BuiltFlight(build: LocalDate => Flight)
+  def medicalMeal(name: String)(iata: SpecialMealIataCode): SpecialMeal = ???
+  def religiousMeal(name: String)(iata: SpecialMealIataCode): SpecialMeal = ???
+  def childrenMeal(name: String)(iata: SpecialMealIataCode): SpecialMeal = ???
 
-  // PASSENGER
+  def `with meal IATA code`(value: String): SpecialMealIataCode = ???
 
-  class PassengerBuilder:
-    def named(fn: String, ln: String): PassengerFFBuilder =
-      val name = Name(FirstName(fn), LastName(ln))
-      PassengerFFBuilder(name)
+  // Reservation
+  def reservedFor(passenger: Passenger) = this
+  def onFlight(flight: Flight) = this
+  def atSeat(seat: Seat): FlightReservation = ???
 
-  def PassengerBuilder(): PassengerBuilder = new PassengerBuilder
+  // ---------- trips (function sequences) ----------
+  /** Build a trip providing a date to materialize flights (if your impl needs it))(
+    * and a varargs of flights plus varargs of reservations.
+    */
+  def trip(reservations: FlightReservation*): Trip = ???
 
-  case class PassengerFFBuilder(name: Name):
-    def withFrequentFlyer(airline: Airline, code: Int): Passenger =
-      val ffn = FrequentFlyerNumber(airline, FrequentFlyerCode(code))
-      Passenger(name, Some(ffn))
+  // ---------- meal orders ----------
+  def order(passenger: Passenger) = this
+  def on(reservation: FlightReservation) = this
+  def meals(meals: SpecialMeal*): MealOrder = ???
 
-    def noFrequentFlyer(): Passenger =
-      Passenger(name, None)
+  // Booking
+  def booking(code: BookingCode) = this
+  def `with booking code`(value: String): BookingCode = ???
+  def `with passenger`(passengers: Passenger*) = this
+  def `contains trips`(trips: Trip*): Booking = ???
 
 end NLPFluentApi

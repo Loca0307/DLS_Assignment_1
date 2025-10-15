@@ -14,14 +14,9 @@ import scala.language.unsafeNulls
  * files, please remember to import them.
  */
 
-case class FirstName(val value: String):
-  require(value.nonEmpty, "First name cannot be empty")
-
-case class LastName(val value: String):
-  require(value.nonEmpty, "Last name cannot be empty")
-
-case class Name(val fn: FirstName, val ln: LastName):
-  val fullName: String = fn.value + " " + ln.value
+case class PassengerName(val first: String, val last: String):
+  require(first.nonEmpty && last.nonEmpty, "First and last name cannot be empty")
+  val fullName: String = first + " " + last
 
 case class FrequentFlyerCode(val value: Int):
   require(value > 0 && value <= 99999999, "Frequent flyer code must be between 1 and 99999999 (max 8 numbers)")
@@ -65,12 +60,12 @@ sealed trait Flight:
   val soldBy: Airline
   val sellerFlightNumber: FlightNumber
   val operatorFlightNumber: FlightNumber
-  val cabins: Set[Cabin]
-  val mealOffers: Set[SpecialMeal]
+  val cabins: Set[Cabin]  // Bonus
+  val mealOffers: Set[SpecialMeal]  // Bonus
 
   require(departure != arrival, "Departure and arrival airports must be different")
-  require(sellerFlightNumber.airline == soldBy, "Seller flight number must belong to soldBy airline")
-  require(operatorFlightNumber.airline == operatedBy, "Operator flight number must belong to operatedBy airline")
+  require(sellerFlightNumber.airline == soldBy, "Seller airline and soldBy airline must be the same")
+  require(operatorFlightNumber.airline == operatedBy, "Operator airline and operatedBy airline must be the same")
 
 case class PureFlight(
   date: LocalDate,
@@ -80,8 +75,8 @@ case class PureFlight(
   soldBy: Airline,
   sellerFlightNumber: FlightNumber,
   operatorFlightNumber: FlightNumber,
-  cabins: Set[Cabin],
-  mealOffers: Set[SpecialMeal]
+  cabins: Set[Cabin], // Bonus
+  mealOffers: Set[SpecialMeal]  // Bonus
 ) extends Flight:
   require(operatedBy == soldBy, "A PureFlight must be operated and sold by the same airline")
   require(sellerFlightNumber == operatorFlightNumber, "A PureFlight must have same seller and operator flight number")
@@ -94,24 +89,28 @@ case class CodeshareFlight (
   soldBy: Airline,
   sellerFlightNumber: FlightNumber,
   operatorFlightNumber: FlightNumber,
-  cabins: Set[Cabin],
-  mealOffers: Set[SpecialMeal]
+  cabins: Set[Cabin], // Bonus
+  mealOffers: Set[SpecialMeal]  // Bonus
 ) extends Flight:
   require(operatedBy != soldBy, "A CodeshareFlight must be sold and operated by two different airlines")
   require(sellerFlightNumber.code != operatorFlightNumber.code, "A CodeshareFlight must have different 4-digit flight numbers")
 
+// Bonus
 case class SpecialMealIataCode(val value: String):
   require(value.matches("[A-Z]{4}"))
 
+// Bonus
 sealed trait SpecialMeal:
   val iata: SpecialMealIataCode
   val name: String
 
+// Bonus
 case class MedicalDietarySpecialMeal(
   iata: SpecialMealIataCode,
   name: String
 ) extends SpecialMeal
 
+// Bonus
 case class ReligiousMeal(
   iata: SpecialMealIataCode,
   name: String
@@ -122,141 +121,141 @@ case class ChildrenMeal(
   name: String
 ) extends SpecialMeal
 
+// Bonus
 case class MealOrder(meals: Set[SpecialMeal], flightReservation: FlightReservation):
   require(meals.nonEmpty, "At least one meal must exists")
 
   val hasChildrenMeal = meals.exists(_.isInstanceOf[ChildrenMeal])
   require(!hasChildrenMeal || flightReservation.passenger.isInstanceOf[ChildPassenger], "A ChildrenMeal can be requested only by a ChildrenPassenger")
 
+// Bonus
 sealed trait Cabin:
   val seats: Set[Seat]
 
   require(seats.nonEmpty)
 
+// Bonus
 case class EconomyClass(
   seats: Set[Seat]
 ) extends Cabin
 
+// Bonus
 case class PremiumEconomyClass(
   seats: Set[Seat]
 ) extends Cabin
 
+// Bonus
 case class BusinessClass(
   seats: Set[Seat]
 ) extends Cabin
 
+// Bonus
 case class FirstClass(
   seats: Set[Seat]
 ) extends Cabin
 
+// Bonus
 case class SeatNumber(val value: Int):
   require(value > 0 && value <=99)
 
   def formatted: String = f"$value%02d"
 
+// Bonus
 case class SeatLetter(val value: Char):
   require(value.isUpper)
 
   def string: String = value.toString()
 
+// Bonus
 case class Seat(val letter: SeatLetter, val number: SeatNumber):
   def formatted: String = letter.string + number.formatted;
 
 sealed trait Passenger:
-  val name: Name
-  val age: Int
+  val name: PassengerName
+  val age: Int  // Bonus
   val ffn: Option[FrequentFlyerNumber]
 
-  require(age > 0 && age < 100)
+  require(age > 0 && age < 100) // Bonus
 
 case class ChildPassenger(
-  name: Name,
-  age: Int,
+  name: PassengerName,
+  age: Int, // Bonus
   ffn: Option[FrequentFlyerNumber]
 ) extends Passenger:
-  require(age <= 5)
+  require(age <= 5) // Bonus
 
 case class YoungPassenger(
-  name: Name,
-  age: Int,
+  name: PassengerName,
+  age: Int, // Bonus
   ffn: Option[FrequentFlyerNumber]
 ) extends Passenger:
-  require(age > 5 && age <= 12)
+  require(age > 5 && age <= 12) // Bonus
 
 case class AdultPassenger(
-  name: Name,
-  age: Int,
+  name: PassengerName,
+  age: Int, // Bonus
   ffn: Option[FrequentFlyerNumber]
 ) extends Passenger:
-  require(age > 12 && age <= 60)
+  require(age > 12 && age <= 60)  // Bonus
 
 case class SeniorPassenger(
-  name: Name,
-  age: Int,
+  name: PassengerName,
+  age: Int, // Bonus
   ffn: Option[FrequentFlyerNumber]
 ) extends Passenger:
-  require(age > 60)
+  require(age > 60) // Bonus
 
 case class Booking(val code: BookingCode, val trips: Set[Trip], val passengers: Set[Passenger]):
+  val passInReservations: Set[Passenger] = trips.flatMap(_.reservations.map(_.passenger)) // Trip1: [R1, R2] Trip2: [R3, R4] -> Set(Set(R1, R2), Set(R3, R4)) -> Set(Set(P1, P2), Set(P3, P4)) -> Set(P1, P2, P3, P4)
+
   require(trips.nonEmpty && passengers.nonEmpty)
+  require(passInReservations.subsetOf(passengers), "All passengers used in trip reservations must belong to the booking")
 
 case class FlightReservation(val passenger: Passenger, val seat: Seat, val flight: Flight):
   require(flight.cabins.exists(_.seats.contains(seat)), "Seat must exist in one of the flight cabins")  // Anonymous funct.: cabin => cabin.seats.contains(seat)
 
-case class Trip(val flights: Set[Flight], val reservations: Set[FlightReservation]):
-  require(flights.nonEmpty, "A trip must have at least one flight")
+case class Trip(val reservations: Set[FlightReservation]):
   require(reservations.nonEmpty, "A trip must have at least one reservation")
-  require(reservations.forall(r => flights.contains(r.flight)), "All reservations must refer to flights in this trip")
-
-
 
 /** Exercise 2: Example 1 
   */
 @main def runExample1(): Unit =
-  //TODO: da semplificare per allineare alle richieste dell'assignment
-  val syd = Airport(
+  val SYD = Airport(
     AirportCode("SYD"),
     AirportCity("Sydney"),
     "Sydney Airport"
   )
-  val cdg = Airport(
+  val CDG = Airport(
     AirportCode("CDG"),
     AirportCity("Paris"),
     "Paris Airport"
     )
-  val sin = Airport(
+  val SIN = Airport(
     AirportCode("SIN"),
     AirportCity("Singapore"),
     "Singapore Airport"
     )
 
-  val ox = Airline(
+  val OX = Airline(
     "Oceanic Airlines", 
     IATACode("OX")
     )
-  val pa = Airline(
+  val PA = Airline(
     "Pan Am", 
     IATACode("PA")
     )
 
   val alex = ChildPassenger(
-    name = Name(FirstName("Alex"), LastName("Geek")),
+    name = PassengerName("Alex", "Geek"),
     age = 4,
-    ffn = Some(FrequentFlyerNumber(ox, FrequentFlyerCode(89156273)))
-  )
-  val john = AdultPassenger(
-    name = Name(FirstName("John"), LastName("Doe")),
-    age = 30,
-    ffn = None
+    ffn = Some(FrequentFlyerNumber(OX, FrequentFlyerCode(89156273)))
   )
 
-  // Same seats reused in all flights
-  val sA1 = Seat(SeatLetter('A'), SeatNumber(1))
-  val sA2 = Seat(SeatLetter('A'), SeatNumber(2))
-  val econ = EconomyClass(Set(sA1, sA2))
-  val busi = BusinessClass(Set(sA1))
+  val A1 = Seat(SeatLetter('A'), SeatNumber(1))
+  val A2 = Seat(SeatLetter('A'), SeatNumber(2))
+  val econ = EconomyClass(Set(A1, A2))
+  val busi = BusinessClass(Set(A1))
 
-  // --- Special meals offerti sul volo
   val childMeal = ChildrenMeal(
     SpecialMealIataCode("BBML"),
     "Baby Meal"
@@ -269,12 +268,12 @@ case class Trip(val flights: Set[Flight], val reservations: Set[FlightReservatio
   // SYD -> CDG, pure (OX0815)
   val fOut = PureFlight(
     date = LocalDate.of(2025, 10, 1),
-    departure = syd,
-    arrival = cdg,
-    operatedBy = ox,
-    soldBy = ox,
-    sellerFlightNumber = FlightNumber(FlightCode(815), ox),
-    operatorFlightNumber = FlightNumber(FlightCode(815), ox),
+    departure = SYD,
+    arrival = CDG,
+    operatedBy = OX,
+    soldBy = OX,
+    sellerFlightNumber = FlightNumber(FlightCode(815), OX),
+    operatorFlightNumber = FlightNumber(FlightCode(815), OX),
     cabins = Set(econ, busi),
     mealOffers = Set(childMeal, gfMeal)
   )
@@ -282,12 +281,12 @@ case class Trip(val flights: Set[Flight], val reservations: Set[FlightReservatio
   // SYD -> SIN, pure (OX0700)
   val fBack1 = PureFlight(
     date = LocalDate.of(2026, 10, 15),
-    departure = syd,
-    arrival = sin,
-    operatedBy = ox,
-    soldBy = ox,
-    sellerFlightNumber = FlightNumber(FlightCode(700), ox),
-    operatorFlightNumber = FlightNumber(FlightCode(700), ox),
+    departure = SYD,
+    arrival = SIN,
+    operatedBy = OX,
+    soldBy = OX,
+    sellerFlightNumber = FlightNumber(FlightCode(700), OX),
+    operatorFlightNumber = FlightNumber(FlightCode(700), OX),
     cabins = Set(econ),
     mealOffers = Set(childMeal, gfMeal)
   )
@@ -295,108 +294,27 @@ case class Trip(val flights: Set[Flight], val reservations: Set[FlightReservatio
   // SIN -> CDG, codeshare (sold OX0403, operated PA0100)
   val fBack2 = CodeshareFlight(
     date = LocalDate.of(2026, 10, 15),
-    departure = sin,
-    arrival = cdg,
-    operatedBy = pa,
-    soldBy = ox,
-    sellerFlightNumber = FlightNumber(FlightCode(403), ox),   // OX0403
-    operatorFlightNumber = FlightNumber(FlightCode(100), pa), // PA0100
+    departure = SIN,
+    arrival = CDG,
+    operatedBy = PA,
+    soldBy = OX,
+    sellerFlightNumber = FlightNumber(FlightCode(403), OX),   // OX0403
+    operatorFlightNumber = FlightNumber(FlightCode(100), PA), // PA0100
     cabins = Set(econ),
     mealOffers = Set(childMeal, gfMeal)
   )
 
-  val resAlexOut = FlightReservation(alex, sA1, fOut)
-  val resJohnBack = FlightReservation(john, sA2, fBack1)
+  val resAlexOut = FlightReservation(alex, A1, fOut)
+  val resAlexBack1 = FlightReservation(alex, A2, fBack1)
+  val resAlexBack2 = FlightReservation(alex, A1, fBack2)
 
-  val orderAlex = MealOrder(Set(childMeal), resAlexOut) // OK
-  val orderJohn = MealOrder(Set(gfMeal), resJohnBack)  // OK  
+  val orderAlex = MealOrder(Set(childMeal), resAlexOut) // Allowed
 
-  val tripOut = Trip(flights = Set(fOut), reservations = Set(resAlexOut))
-  val tripBack = Trip(flights = Set(fBack1, fBack2), reservations = Set(resJohnBack))
+  val tripOut = Trip(reservations = Set(resAlexOut))
+  val tripBack = Trip(reservations = Set(resAlexBack1, resAlexBack2))
 
-  // --- Booking (passegners in reservations ⊆ passengers)
   val booking = Booking(
     code = BookingCode("A1B2C3"),
     trips = Set(tripOut, tripBack),
-    passengers = Set(alex, john)
+    passengers = Set(alex)
   )
-
-  println(printBooking(booking))
-  println()
-  println(printOrders(Seq(orderAlex, orderJohn)))
-
-def printOrders(orders: Iterable[MealOrder]): String =
-  val lines = orders.map { o =>
-    val pas = o.flightReservation.passenger.name.fullName
-    val meals = o.meals.map(_.name).mkString(", ")
-    val date = o.flightReservation.flight.date
-    val op = o.flightReservation.flight.operatedBy.name
-    val opNum = o.flightReservation.flight.operatorFlightNumber.value
-    s"  - $pas: $meals on flight [$opNum] operated by $op (on $date)"
-  }.mkString("\n")
-
-  s"Orders:\n$lines"
-
-def printBooking(b: Booking): String =
-  var text = s"Booking ${b.code.value}\n"
-
-  text += "Passengers:\n"
-  for p <- b.passengers do
-    val ffnText = p.ffn.map(_.value).getOrElse("No Frequent Flyer Number")
-    text += s"  - ${p.name.fullName} (FFN: $ffnText)\n"
-
-  var i = 1
-  for trip <- b.trips do
-    text += s"Trip $i:\n"
-    for f <- trip.flights do text += s"  ${printFlightLine(f)}\n"
-    i += 1
-
-  text
-
-def printFlightLine(f: Flight): String =
-  val dep = f.departure.code.value
-  val arr = f.arrival.code.value
-  val date = f.date
-  val soldBy = f.soldBy.name
-  val operatedBy = f.operatedBy.name
-  val soldCode = f.sellerFlightNumber.value
-  val operatedCode = f.operatorFlightNumber.value
-
-  f match
-    case _: PureFlight =>
-      s"$date - $dep -> $arr - [Pure flight] operated by $operatedBy [$operatedCode]"
-    case _: CodeshareFlight =>
-      s"$date - $dep -> $arr - [Codeshare flight] sold by $soldBy [$soldCode] and operated by $operatedBy [$operatedCode]"
-
-
-// --------- MINI ESEMPIO DI ERRORE (ChildrenMeal a un adulto) ---------
-/*@main def runExampleFailChildrenMeal(): Unit =
-  val mxp = Airport(AirportCode("MXP"), AirportCity("Milan"), "Milano Malpensa")
-  val zrh = Airport(AirportCode("ZRH"), AirportCity("Zurich"), "Zurich Airport")
-  val lx  = Airline("Swiss", IATACode("LX"))
-
-  val adult = AdultPassenger(Name(FirstName("Luca"), LastName("Rossi")), age = 35, ffn = None)
-
-  val econ = EconomyClass(Set(Seat(SeatLetter('A'), SeatNumber(1))))
-  val chml = ChildrenMeal(SpecialMealIataCode("CHML"), "Children Meal")
-
-  val date: LocalDate = LocalDate.of(2025, 3, 10)
-
-  val f = PureFlight(
-    date = date,
-    departure = mxp,
-    arrival = zrh,
-    operatedBy = lx,
-    soldBy = lx,
-    sellerFlightNumber   = FlightNumber(FlightCode(123), lx),
-    operatorFlightNumber = FlightNumber(FlightCode(123), lx),
-    cabins = Set(econ),
-    mealOffers = Set(chml)
-  )
-
-  try
-    val badOrder = MealOrder(Set(chml), adult, f)
-    println("ERRORE: non avrei dovuto arrivare qui " + badOrder)
-  catch
-    case ex: IllegalArgumentException =>
-      println("OK: vincolo rispettato → " + ex.getMessage)*/
