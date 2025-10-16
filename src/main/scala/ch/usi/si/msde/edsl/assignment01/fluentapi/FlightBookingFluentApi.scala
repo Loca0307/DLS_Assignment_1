@@ -7,7 +7,7 @@ import java.awt.print.Book
 trait NLPFluentApi:
 
   def named(name: String) = name  // Only for beautifying the API
-  def `flight code`(value: Int): FlightCode = ???
+
   
   // Airline
   def airline(name: String)(code: IATACode): Airline = ???
@@ -19,25 +19,25 @@ trait NLPFluentApi:
   def `in city`(value: String): AirportCity = ???
 
   // Passenger
-  def passNamed(first: String)(last: String): PassengerName = ???
-  def childPassenger(name: PassengerName)(age: Int) = this
-  def youngPassenger(name: PassengerName)(age: Int) = this
-  def adultPassenger(name: PassengerName)(age: Int) = this
-  def seniorPassenger(name: PassengerName)(age: Int) = this
-  def withFrequentFlyer(airline: Airline)(code: FrequentFlyerCode): Passenger = ???
-  def `ff code`(value: Int): FrequentFlyerCode = ???
-  def noFrequentFlyer(): Passenger = ???
+  def `named as`(first: String)(last: String): PassengerName = ???
+  def childPassenger(name: PassengerName) = this
+  def youngPassenger(name: PassengerName) = this
+  def adultPassenger(name: PassengerName) = this
+  def seniorPassenger(name: PassengerName) = this
+  def `years old`(age: Int) = this
+  def `with frequent flyer number`(airline: Airline)(code: Int): Passenger = ??? // Int instead of FlyerCode to simplify function call
+  def `without frequent flyer number`(): Passenger = ???
 
   // Fligth
-  def `pure flight` = this
-  def `codeshare flight` = this
+  def pureFlight = this
+  def codeshareFlight = this
   def `on date`(onDate: LocalDate) = this
   def from(departure: Airport) = this
   def to(arrival: Airport) = this
-  def soldBy(airline: Airline) = this                               // Could be optional the flight is pure
-  def `with seller flight number`(sellerNumber: FlightCode) = this  // Could be optional the flight is pure
-  def operatedBy(airline: Airline) = this
-  def `with operator flight number`(operatorNumber: FlightCode) = this 
+  def `sold by`(airline: Airline) = this                            // Optional if flight is pure
+  def `with seller flight number`(sellerNumber: Int) = this         // Optional if flight is pure
+  def `operated by`(airline: Airline) = this
+  def `with operator flight number`(operatorNumber: Int) = this     // Int instead of FlightCode to simplify function call
   def `offers special meals`(meals: SpecialMeal*) = this
   def `includes cabins`(cabins: Cabin*): Flight = ???
 
@@ -56,22 +56,22 @@ trait NLPFluentApi:
   def `with meal IATA code`(value: String): SpecialMealIataCode = ???
 
   // Reservation
-  def reservedFor(passenger: Passenger) = this
-  def onFlight(flight: Flight) = this
-  def atSeat(seat: Seat): FlightReservation = ???
+  def `reserved for`(passenger: Passenger) = this
+  def `on flight`(flight: Flight) = this
+  def `at seat`(seat: Seat): FlightReservation = ???
 
   // Trip
   def trip(reservations: FlightReservation*): Trip = ???
 
   // Special Meal
-  def order(passenger: Passenger) = this
+  def `ordered by`(passenger: Passenger) = this
   def on(reservation: FlightReservation) = this
   def meals(meals: SpecialMeal*): MealOrder = ???
 
   // Booking
   def booking(code: BookingCode) = this
   def `with booking code`(value: String): BookingCode = ???
-  def `with passenger`(passengers: Passenger*) = this
+  def `with passengers`(passengers: Passenger*) = this
   def `contains trips`(trips: Trip*): Booking = ???
 
 end NLPFluentApi

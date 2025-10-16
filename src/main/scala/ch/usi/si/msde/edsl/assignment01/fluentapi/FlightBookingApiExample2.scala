@@ -11,6 +11,7 @@ object FlightBookingEx2 extends NLPFluentApi:
     
     val LX = airline(named("Swiss Airline"))(`with IATA code`("LX"))
 
+    // Variables to easy reuse
     val A1 = seat('A')(1)
     val A2 = seat('A')(2)
     val B1 = seat('B')(1)
@@ -18,42 +19,46 @@ object FlightBookingEx2 extends NLPFluentApi:
     val C1 = seat('C')(1)
     val C2 = seat('C')(2)
 
+    //Bonus
     val ecoClass = economyClass(`has seats`(A1, A2))
     val busClass = businessClass(`has seats`(B1, B2))
     val fClass = firstClass(`has seats`(C1, C2))
 
-    val babyMeal = childrenMeal(named("Baby meal"))(`with meal IATA code`("CHML"))
+    // Bonus
     val glutenFreeMeal = medicalMeal(named("Gluten-Free Meal"))(`with meal IATA code`("GFML"))
+    val babyMeal = childrenMeal(named("Baby meal"))(`with meal IATA code`("BBML"))
 
-    val john = childPassenger(passNamed("John")("Doe"))(5).noFrequentFlyer()
-    val jane = adultPassenger(passNamed("Jane")("Doe"))(35).withFrequentFlyer(LX)(`ff code`(1234))
+    val john = childPassenger(`named as`("John")("Doe"))
+        .`years old`(14)    // Bonus
+        .`without frequent flyer number`()
+    val jane = adultPassenger(`named as`("Jane")("Doe"))
+        .`years old`(35)    // Bonus
+        .`with frequent flyer number`(LX)(1234)
 
-    val outboundFlight = `pure flight`
-        .from(MXP).to(ZRH)
+    val outboundFlight = pureFlight.from(MXP).to(ZRH)
         .`on date`(LocalDate.of(2026, 1, 1))
-        .operatedBy(LX).`with operator flight number`(`flight code`(1234))
+        .`operated by`(LX).`with operator flight number`(1234)
         .`offers special meals`(babyMeal, glutenFreeMeal)
         .`includes cabins`(ecoClass)
 
-    val inboundFlight = `pure flight`
-        .from(ZRH).to(MXP)
+    val inboundFlight = pureFlight.from(ZRH).to(MXP)
         .`on date`(LocalDate.of(2026, 1, 10))
-        .operatedBy(LX).`with operator flight number`(`flight code`(2345))
+        .`operated by`(LX).`with operator flight number`(2345)
         .`offers special meals`(babyMeal)
         .`includes cabins`(busClass, fClass)
 
-    val outReservJohn = reservedFor(john).onFlight(outboundFlight).atSeat(A1)
-    val outReservJane = reservedFor(jane).onFlight(outboundFlight).atSeat(A2)
-    val inReservJohn = reservedFor(john).onFlight(inboundFlight).atSeat(C1)
-    val inReservJane = reservedFor(jane).onFlight(inboundFlight).atSeat(C2)
+    val outReservJohn = `reserved for`(john).`on flight`(outboundFlight).`at seat`(A1)
+    val outReservJane = `reserved for`(jane).`on flight`(outboundFlight).`at seat`(A2)
+    val inReservJohn = `reserved for`(john).`on flight`(inboundFlight).`at seat`(C1)
+    val inReservJane = `reserved for`(jane).`on flight`(inboundFlight).`at seat`(C2)
 
     val outboundTrip = trip(outReservJohn, outReservJane)
     val inboundTrip = trip(inReservJohn, inReservJane)
 
     val book = booking(`with booking code`("LX9Z1Q"))
-        .`with passenger`(john, jane)
+        .`with passengers`(john, jane)
         .`contains trips`(outboundTrip, inboundTrip)
 
-    val order1 = order(john).on(outReservJohn).meals(babyMeal)  // childPassenger -> babyMeal
-    val order2 = order(jane).on(outReservJane).meals(glutenFreeMeal)
-    val order3 = order(jane).on(inReservJohn).meals(babyMeal)
+    val order1 = `ordered by`(john).on(outReservJohn).meals(babyMeal)  // childPassenger -> babyMeal
+    val order2 = `ordered by`(jane).on(outReservJane).meals(glutenFreeMeal)
+    val order3 = `ordered by`(jane).on(inReservJohn).meals(babyMeal)

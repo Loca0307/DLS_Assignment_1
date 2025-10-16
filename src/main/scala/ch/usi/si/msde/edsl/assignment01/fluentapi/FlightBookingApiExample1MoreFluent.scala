@@ -18,6 +18,7 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
     val OX  = airline(named("Oceanic Airlines"))(`with IATA code`("OX"))
     val PA  = airline(named("Pan Am"))(`with IATA code`("PA"))
 
+    // Variables to easy reuse
     val A1 = seat('A')(1)
     val A2 = seat('A')(2)
     val B1 = seat('B')(1)
@@ -25,37 +26,37 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
     val C1 = seat('C')(1)
     val C2 = seat('C')(2)
 
-    val babyMeal = childrenMeal(named("Baby meal"))(`with meal IATA code`("CHML"))
-    val glutenFreeMeal = medicalMeal(named("Gluten-Free Meal"))(`with meal IATA code`("GFML"))
-
-    val alex = youngPassenger(passNamed("Alex")("Geek"))(14).withFrequentFlyer(OX)(`ff code`(89156273))
+    val alex = youngPassenger(`named as`("Alex")("Geek"))
+        .`with frequent flyer number`(OX)(89156273)
 
     val b1 = booking(`with booking code`("A1B2C3"))
-        .`with passenger`(alex)
+        .`with passengers`(alex)
         .`contains trips`(
             trip(
-                reservedFor(alex).onFlight(
-                    `pure flight`.from(SYD).to(CDG)
-                        .`on date`(LocalDate.of(2025, 10, 1))
-                        .operatedBy(OX).`with operator flight number`(`flight code`(815))
-                        .`offers special meals`(babyMeal, glutenFreeMeal)
+                `reserved for`(alex)
+                .`on flight`(
+                    pureFlight.from(SYD).to(CDG)
+                        .`on date`(LocalDate.of(2025, 12, 27))
+                        .`operated by`(OX).`with operator flight number`(815)
                         .`includes cabins`(
                             economyClass(`has seats`(A1, A2)), 
                             businessClass(`has seats`(B1, B2)), 
                             firstClass(`has seats`(C1, C2)))
-                ).atSeat(A1)), 
+                ).`at seat`(A1)), 
             trip(
-                reservedFor(alex).onFlight(
-                    `pure flight`.from(SYD).to(SIN)
-                        .`on date`(LocalDate.of(2025, 10, 15))
-                        .operatedBy(OX).`with operator flight number`(`flight code`(700))
-                        .`offers special meals`(babyMeal)
+                `reserved for`(alex)
+                .`on flight`(
+                    pureFlight.from(SYD).to(SIN)
+                        .`on date`(LocalDate.of(2026, 1, 15))
+                        .`operated by`(OX).`with operator flight number`(700)
                         .`includes cabins`(economyClass(`has seats`(A1, A2)))
-                ).atSeat(B2), 
-                reservedFor(alex).onFlight(
-                    `codeshare flight`.from(SIN).to(CDG)
-                        .`on date`(LocalDate.of(2025, 10, 15))
-                        .soldBy(OX).`with seller flight number`(`flight code`(403))
-                        .operatedBy(PA).`with operator flight number`(`flight code`(100))
+                ).`at seat`(B2), 
+
+                `reserved for`(alex)
+                .`on flight`(
+                    codeshareFlight.from(SIN).to(CDG)
+                        .`on date`(LocalDate.of(2026, 1, 15))
+                        .`sold by`(OX).`with seller flight number`(403)
+                        .`operated by`(PA).`with operator flight number`(100)
                         .`includes cabins`(businessClass(`has seats`(B1, B2)))
-                ).atSeat(C1)))
+                ).`at seat`(C1)))

@@ -44,7 +44,7 @@ case class IATACode(val value: String):
 case class FlightCode(val value: Int):
   require(value > 0 && value <= 9999)
 
-  def formatted: String = f"$value%04d"
+  def formatted: String = f"$value%04d" // Fill with 0s at the left of the value, if necessary
 
 case class Airline(val name: String, val code: IATACode):
   require(name.nonEmpty)
