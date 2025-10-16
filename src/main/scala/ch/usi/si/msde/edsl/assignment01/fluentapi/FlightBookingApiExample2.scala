@@ -6,10 +6,10 @@ import scala.language.unsafeNulls
 
 object FlightBookingEx2 extends NLPFluentApi:
 
-    val MXP = airport(named("Milano Malpensa"))(`with airport code`("MXP"))(`located in`("Milan"))
-    val ZRH = airport(named("Zurich Airport"))(`with airport code`("ZRH"))(`located in`("Zurich"))
+    val MXP = airport(named("Milano Malpensa"))(`identified by airport code`("MXP"))(`located in`("Milan"))
+    val ZRH = airport(named("Zurich Airport"))(`identified by airport code`("ZRH"))(`located in`("Zurich"))
     
-    val LX = airline(named("Swiss Airline"))(`with IATA code`("LX"))
+    val LX = airline(named("Swiss Airline"))(`represented by IATA code`("LX"))
 
     // Variables to easy reuse
     val A1 = seat('A')(1)
@@ -25,8 +25,8 @@ object FlightBookingEx2 extends NLPFluentApi:
     val fClass = firstClass(`has seats`(C1, C2))
 
     // Bonus
-    val glutenFreeMeal = medicalMeal(named("Gluten-Free Meal"))(`with meal IATA code`("GFML"))
-    val babyMeal = childrenMeal(named("Baby meal"))(`with meal IATA code`("BBML"))
+    val glutenFreeMeal = medicalMeal(named("Gluten-Free Meal"))(`recognized by meal IATA code`("GFML"))
+    val babyMeal = childrenMeal(named("Baby meal"))(`recognized by meal IATA code`("BBML"))
 
     val john = childPassenger(`named as`("John")("Doe"))
         .`years old`(14)    // Bonus
@@ -54,7 +54,7 @@ object FlightBookingEx2 extends NLPFluentApi:
     val outboundTrip = trip(outReservJohn, outReservJane)
     val inboundTrip = trip(inReservJohn, inReservJane)
 
-    val book = booking(`with booking code`("LX9Z1Q"))
+    val book = booking(`identified by booking code`("LX9Z1Q"))
         .`involves passengers`(john, jane)
         .`contains trips`(outboundTrip, inboundTrip)
 

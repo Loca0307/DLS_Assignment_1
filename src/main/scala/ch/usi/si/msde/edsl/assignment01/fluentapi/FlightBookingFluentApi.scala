@@ -11,11 +11,11 @@ trait NLPFluentApi:
   
   // Airline
   def airline(name: String)(code: IATACode): Airline = ???
-  def `with IATA code`(value: String): IATACode = ???
+  def `represented by IATA code`(value: String): IATACode = ???
 
   // Airport
   def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???  // OR NESTED def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???
-  def `with airport code`(value: String): AirportCode = ???
+  def `identified by airport code`(value: String): AirportCode = ???
   def `located in`(value: String): AirportCity = ???
 
   // Passenger
@@ -53,7 +53,7 @@ trait NLPFluentApi:
   def religiousMeal(name: String)(iata: SpecialMealIataCode): SpecialMeal = ???
   def childrenMeal(name: String)(iata: SpecialMealIataCode): SpecialMeal = ???
 
-  def `with meal IATA code`(value: String): SpecialMealIataCode = ???
+  def `recognized by meal IATA code`(value: String): SpecialMealIataCode = ???
 
   // Reservation
   def `reserved for`(passenger: Passenger) = this
@@ -70,7 +70,7 @@ trait NLPFluentApi:
 
   // Booking
   def booking(code: BookingCode) = this
-  def `with booking code`(value: String): BookingCode = ???
+  def `identified by booking code`(value: String): BookingCode = ???
   def `involves passengers`(passengers: Passenger*) = this
   def `contains trips`(trips: Trip*): Booking = ???
 

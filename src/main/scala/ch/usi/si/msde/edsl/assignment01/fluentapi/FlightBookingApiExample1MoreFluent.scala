@@ -11,12 +11,12 @@ import scala.language.unsafeNulls
   */
 object FlightBookingEx1MoreFluent extends NLPFluentApi:
 
-    val SYD = airport(named("Sydney Airport"))(`with airport code`("SYD"))(`located in`("Sydney"))
-    val CDG = airport(named("Paris Airport"))(`with airport code`("CDG"))(`located in`("Paris"))
-    val SIN = airport(named("Singapore Airport"))(`with airport code`("SIN"))(`located in`("Singapore"))
+    val SYD = airport(named("Sydney Airport"))(`identified by airport code`("SYD"))(`located in`("Sydney"))
+    val CDG = airport(named("Paris Airport"))(`identified by airport code`("CDG"))(`located in`("Paris"))
+    val SIN = airport(named("Singapore Airport"))(`identified by airport code`("SIN"))(`located in`("Singapore"))
 
-    val OX  = airline(named("Oceanic Airlines"))(`with IATA code`("OX"))
-    val PA  = airline(named("Pan Am"))(`with IATA code`("PA"))
+    val OX  = airline(named("Oceanic Airlines"))(`represented by IATA code`("OX"))
+    val PA  = airline(named("Pan Am"))(`represented by IATA code`("PA"))
 
     // Variables to easy reuse
     val A1 = seat('A')(1)
@@ -29,7 +29,7 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
     val alex = youngPassenger(`named as`("Alex")("Geek"))
         .`owns frequent flyer number`(OX)(89156273)
 
-    val b1 = booking(`with booking code`("A1B2C3"))
+    val b1 = booking(`identified by booking code`("A1B2C3"))
         .`involves passengers`(alex)
         .`contains trips`(
             trip(
