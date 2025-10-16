@@ -11,9 +11,9 @@ import scala.language.unsafeNulls
   */
 object FlightBookingEx1 extends NLPFluentApi:
 
-    val SYD = airport(named("Sydney Airport"))(`with airport code`("SYD"))(`in city`("Sydney"))
-    val CDG = airport(named("Paris Airport"))(`with airport code`("CDG"))(`in city`("Paris"))
-    val SIN = airport(named("Singapore Airport"))(`with airport code`("SIN"))(`in city`("Singapore"))
+    val SYD = airport(named("Sydney Airport"))(`with airport code`("SYD"))(`located in`("Sydney"))
+    val CDG = airport(named("Paris Airport"))(`with airport code`("CDG"))(`located in`("Paris"))
+    val SIN = airport(named("Singapore Airport"))(`with airport code`("SIN"))(`located in`("Singapore"))
 
     val OX  = airline(named("Oceanic Airlines"))(`with IATA code`("OX"))
     val PA  = airline(named("Pan Am"))(`with IATA code`("PA"))

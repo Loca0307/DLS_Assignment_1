@@ -6,8 +6,8 @@ import scala.language.unsafeNulls
 
 object FlightBookingEx2 extends NLPFluentApi:
 
-    val MXP = airport(named("Milano Malpensa"))(`with airport code`("MXP"))(`in city`("Milan"))
-    val ZRH = airport(named("Zurich Airport"))(`with airport code`("ZRH"))(`in city`("Zurich"))
+    val MXP = airport(named("Milano Malpensa"))(`with airport code`("MXP"))(`located in`("Milan"))
+    val ZRH = airport(named("Zurich Airport"))(`with airport code`("ZRH"))(`located in`("Zurich"))
     
     val LX = airline(named("Swiss Airline"))(`with IATA code`("LX"))
 

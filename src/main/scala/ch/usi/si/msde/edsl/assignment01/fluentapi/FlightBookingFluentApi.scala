@@ -16,7 +16,7 @@ trait NLPFluentApi:
   // Airport
   def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???  // OR NESTED def airport(name: String)(code: AirportCode)(city: AirportCity): Airport = ???
   def `with airport code`(value: String): AirportCode = ???
-  def `in city`(value: String): AirportCity = ???
+  def `located in`(value: String): AirportCity = ???
 
   // Passenger
   def `named as`(first: String)(last: String): PassengerName = ???
