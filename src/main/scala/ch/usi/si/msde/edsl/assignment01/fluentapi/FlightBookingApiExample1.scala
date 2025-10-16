@@ -31,14 +31,14 @@ object FlightBookingEx1 extends NLPFluentApi:
     val fClass = firstClass(`has seats`(C1, C2))
 
     val alex = youngPassenger(`named as`("Alex")("Geek"))   // Due to bonus ex., Passenger is abstract
-        .`with frequent flyer number`(OX)(89156273)
+        .`owns frequent flyer number`(OX)(89156273)
 
     val outboundFlight = pureFlight.from(SYD).to(CDG)
         .`on date`(LocalDate.of(2025, 12, 27))
         .`operated by`(OX).`with operator flight number`(815)  // OX0815
         .`includes cabins`(ecoClass, busClass, fClass)
     
-    val inboundFlight1 = pureFlight.from(SYD).to(SIN)    // In this API, a pure flight only needs operatedBy(...) (soldBy should be deducted)
+    val inboundFlight1 = pureFlight.from(SYD).to(SIN)    // In this API, a pure flight only needs operatedBy(...) (soldBy should be deducted by the actual implementation of API)
         .`on date`(LocalDate.of(2026, 1, 15))
         .`operated by`(OX).`with operator flight number`(700)  // OX0700
         .`includes cabins`(ecoClass)
@@ -57,5 +57,5 @@ object FlightBookingEx1 extends NLPFluentApi:
     val inboundTrip = trip(inReservation1, inReservation2)
 
     val book = booking(`with booking code`("A1B2C3"))
-        .`with passengers`(alex)
+        .`involves passengers`(alex)
         .`contains trips`(outboundTrip, inboundTrip)

@@ -25,7 +25,7 @@ trait NLPFluentApi:
   def adultPassenger(name: PassengerName) = this
   def seniorPassenger(name: PassengerName) = this
   def `years old`(age: Int) = this
-  def `with frequent flyer number`(airline: Airline)(code: Int): Passenger = ??? // Int instead of FlyerCode to simplify function call
+  def `owns frequent flyer number`(airline: Airline)(code: Int): Passenger = ??? // Int instead of FlyerCode to simplify function call
   def `without frequent flyer number`(): Passenger = ???
 
   // Fligth
@@ -71,7 +71,7 @@ trait NLPFluentApi:
   // Booking
   def booking(code: BookingCode) = this
   def `with booking code`(value: String): BookingCode = ???
-  def `with passengers`(passengers: Passenger*) = this
+  def `involves passengers`(passengers: Passenger*) = this
   def `contains trips`(trips: Trip*): Booking = ???
 
 end NLPFluentApi

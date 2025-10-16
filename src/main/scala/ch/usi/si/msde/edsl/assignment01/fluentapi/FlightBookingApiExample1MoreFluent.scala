@@ -27,10 +27,10 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
     val C2 = seat('C')(2)
 
     val alex = youngPassenger(`named as`("Alex")("Geek"))
-        .`with frequent flyer number`(OX)(89156273)
+        .`owns frequent flyer number`(OX)(89156273)
 
     val b1 = booking(`with booking code`("A1B2C3"))
-        .`with passengers`(alex)
+        .`involves passengers`(alex)
         .`contains trips`(
             trip(
                 `reserved for`(alex)

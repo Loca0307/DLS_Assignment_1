@@ -33,7 +33,7 @@ object FlightBookingEx2 extends NLPFluentApi:
         .`without frequent flyer number`()
     val jane = adultPassenger(`named as`("Jane")("Doe"))
         .`years old`(35)    // Bonus
-        .`with frequent flyer number`(LX)(1234)
+        .`owns frequent flyer number`(LX)(1234)
 
     val outboundFlight = pureFlight.from(MXP).to(ZRH)
         .`on date`(LocalDate.of(2026, 1, 1))
@@ -44,7 +44,6 @@ object FlightBookingEx2 extends NLPFluentApi:
     val inboundFlight = pureFlight.from(ZRH).to(MXP)
         .`on date`(LocalDate.of(2026, 1, 10))
         .`operated by`(LX).`with operator flight number`(2345)
-        .`offers special meals`(babyMeal)
         .`includes cabins`(busClass, fClass)
 
     val outReservJohn = `reserved for`(john).`on flight`(outboundFlight).`at seat`(A1)
@@ -56,9 +55,8 @@ object FlightBookingEx2 extends NLPFluentApi:
     val inboundTrip = trip(inReservJohn, inReservJane)
 
     val book = booking(`with booking code`("LX9Z1Q"))
-        .`with passengers`(john, jane)
+        .`involves passengers`(john, jane)
         .`contains trips`(outboundTrip, inboundTrip)
 
     val order1 = `ordered by`(john).on(outReservJohn).meals(babyMeal)  // childPassenger -> babyMeal
     val order2 = `ordered by`(jane).on(outReservJane).meals(glutenFreeMeal)
-    val order3 = `ordered by`(jane).on(inReservJohn).meals(babyMeal)
