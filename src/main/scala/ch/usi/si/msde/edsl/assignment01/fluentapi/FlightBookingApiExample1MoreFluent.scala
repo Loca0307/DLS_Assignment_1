@@ -39,7 +39,10 @@ object FlightBookingEx1MoreFluent extends NLPFluentApi:
                         .`on date`(LocalDate.of(2025, 10, 1))
                         .operatedBy(OX).`with operator flight number`(`flight code`(815))
                         .`offers special meals`(babyMeal, glutenFreeMeal)
-                        .`includes cabins`(economyClass(`has seats`(A1, A2)), businessClass(`has seats`(B1, B2)), firstClass(`has seats`(C1, C2)))
+                        .`includes cabins`(
+                            economyClass(`has seats`(A1, A2)), 
+                            businessClass(`has seats`(B1, B2)), 
+                            firstClass(`has seats`(C1, C2)))
                 ).atSeat(A1)), 
             trip(
                 reservedFor(alex).onFlight(
