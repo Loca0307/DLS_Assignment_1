@@ -122,11 +122,9 @@ case class ChildrenMeal(
 ) extends SpecialMeal
 
 // Bonus
-case class MealOrder(meals: Set[SpecialMeal], flightReservation: FlightReservation):
-  require(meals.nonEmpty, "At least one meal must exists")
-
-  val hasChildrenMeal = meals.exists(_.isInstanceOf[ChildrenMeal])
-  require(!hasChildrenMeal || flightReservation.passenger.isInstanceOf[ChildPassenger], "A ChildrenMeal can be requested only by a ChildrenPassenger")
+case class MealOrder(meal: SpecialMeal, flightReservation: FlightReservation):
+  val isChildrenMeal = meal.isInstanceOf[ChildrenMeal]  // Aligned with model: only one meal per order MealOrder -!-> SpecialMeal
+  require(!isChildrenMeal || flightReservation.passenger.isInstanceOf[ChildPassenger], "A ChildrenMeal can be requested only by a ChildrenPassenger") // The problem is when isChildrenMeal && !flightReservation.passenger.isInstanceOf[ChildPassenger]
 
 // Bonus
 sealed trait Cabin:
@@ -206,10 +204,8 @@ case class SeniorPassenger(
   require(age > 60) // Bonus
 
 case class Booking(val code: BookingCode, val trips: Set[Trip], val passengers: Set[Passenger]):
-  val passInReservations: Set[Passenger] = trips.flatMap(_.reservations.map(_.passenger)) // Trip1: [R1, R2] Trip2: [R3, R4] -> Set(Set(R1, R2), Set(R3, R4)) -> Set(Set(P1, P2), Set(P3, P4)) -> Set(P1, P2, P3, P4)
-
   require(trips.nonEmpty && passengers.nonEmpty)
-  require(passInReservations.subsetOf(passengers), "All passengers used in trip reservations must belong to the booking")
+  // require (passengersInReservations must belong to the booking)
 
 case class FlightReservation(val passenger: Passenger, val seat: Seat, val flight: Flight):
   require(flight.cabins.exists(_.seats.contains(seat)), "Seat must exist in one of the flight cabins")  // Anonymous funct.: cabin => cabin.seats.contains(seat)
@@ -248,7 +244,7 @@ case class Trip(val reservations: Set[FlightReservation]):
   val alex = ChildPassenger(
     name = PassengerName("Alex", "Geek"),
     age = 4,
-    ffn = Some(FrequentFlyerNumber(OX, FrequentFlyerCode(89156273)))
+    ffn = Some(FrequentFlyerNumber(OX, FrequentFlyerCode(89156273)))  // Some: to allow the insertion of an object in a Option[] field
   )
 
   val A1 = Seat(SeatLetter('A'), SeatNumber(1))
@@ -308,7 +304,7 @@ case class Trip(val reservations: Set[FlightReservation]):
   val resAlexBack1 = FlightReservation(alex, A2, fBack1)
   val resAlexBack2 = FlightReservation(alex, A1, fBack2)
 
-  val orderAlex = MealOrder(Set(childMeal), resAlexOut) // Allowed
+  val orderAlex = MealOrder(childMeal, resAlexOut) // Allowed
 
   val tripOut = Trip(reservations = Set(resAlexOut))
   val tripBack = Trip(reservations = Set(resAlexBack1, resAlexBack2))
